@@ -1,20 +1,62 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Hello World!</title>
+    <title>User management</title>
 </head>
 <body>
+
+<nav class="navbar navbar-expand-sm navbar-light bg-light" style="background-color: #e3f2fd;" th:fragment="navbar">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{~/}">Home page</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{~/user}">Users list</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{~/login}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" th:action="@{~/logout}" method="post">
+            <button sec:authorize="isAuthenticated()" class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
+            <button sec:authorize="isAnonymous()" th:href="@{~/login}" class="btn btn-outline-info my-2 my-sm-0">Login</button>
+        </form>
+    </div>
+</nav>
+
 <div class="container">
     <h1>Welcome!</h1>
 
-    <p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p>
+    <div>Logged user: <span sec:authentication="name">Anonymous</span></div>
+    <div>Roles: <span sec:authentication="principal.authorities">unknown</span></div>
+    <div>#{loginMB.authentication.authorities}</div>
 
-    <p>Click <a th:href="@{/registration}">here</a> to create a new account.</p>
+    <div sec:authorize="isAuthenticated()">
+        This content is only shown to authenticated users.
+    </div>
+    <div sec:authorize="hasRole('ADMIN')">
+        This content is only shown to administrators.
+    </div>
+    <div sec:authorize="hasRole('USER')">
+        This content is only shown to users.
+    </div>
+
+    <p>Click <a th:href="@{/user}">here</a> to see users list.</p>
+
+    <p>Click <a th:href="@{/login}">here</a> to Login.</p>
 
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out"/>

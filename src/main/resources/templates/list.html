@@ -9,10 +9,15 @@
     <title>Registration!</title>
 </head>
 <body>
+<header th:insert="navbar :: navbar"></header>
+
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h1>Users list</h1>
+
+            <a class="btn btn-success" th:href="@{/user/new}">Add new user</a>
+
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -23,12 +28,14 @@
                 </thead>
                 <tbody>
                     <tr th:each="user : ${users}">
-                        <td th:text="${user.id}"> </td>
-                        <td th:text="${user.userName}"> </td>
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.userName}"></td>
                         <td><a href="/" th:href="@{'/user/' + ${user.id}}">get details</a></td>
                     </tr>
                 </tbody>
             </table>
+
+
 
         </div>
     </div>

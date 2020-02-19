@@ -39,32 +39,50 @@ public class UserController {
         return "view";
     }
 
+    @PostMapping("/{id}")
+    public String changeStatus(@PathVariable("id") Long id, UserAccount user, Model model){
+        UserAccount userAccount = userService.findById(id);
+
+        userAccount.setActive(user.isActive());
+
+        userService.saveUser(userAccount);
+
+        model.addAttribute("user", userAccount);
+
+        return "view";
+    }
+
     @GetMapping("/new")
     public String createUser(){
         return "new";
     }
 
-    @PostMapping("/save")
+    @PostMapping("/new")
     public String saveUser(@ModelAttribute("user") @Valid UserAccount userAccount,
                            BindingResult result){
 
-        UserAccount existing = userService.findByUserName(userAccount.getUsername());
-        if (existing != null){
-            result.rejectValue("username", null, "There is already an user with that username");
+
+        if (userAccount.getId() == null) {
+            UserAccount existing = userService.findByUserName(userAccount.getUsername());
+            if (existing != null){
+                result.rejectValue("userName", null, "There is already an user with that username");
+            }
         }
 
         if (result.hasErrors()){
             return "new";
         }
 
-        userService.registerUser(userAccount);
+        userService.saveUser(userAccount);
 
-        return "redirect:/list";
+        return "redirect:/user";
     }
 
     @GetMapping("/{id}/edit")
     public String updateUser(@PathVariable("id") UserAccount user, Model model){
+
         model.addAttribute("user", user);
+
         return "new";
     }
 

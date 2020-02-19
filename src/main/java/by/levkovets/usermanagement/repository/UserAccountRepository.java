@@ -14,5 +14,7 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     List<UserAccount> findAllByRole(Role role);
 
+    List<UserAccount> findAllByOrderById();
+
 
 }

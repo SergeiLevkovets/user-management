@@ -23,7 +23,7 @@ import java.util.Collections;
 public class UserAccount implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Pattern(regexp ="^[a-zA-Z]+$", message = "Username must contain only latin characters")
@@ -32,14 +32,10 @@ public class UserAccount implements UserDetails {
     @Column(unique = true)
     private String userName;
 
-    @Pattern(regexp = "(?=\\w*(?!\\d)\\w)(?=\\w*\\d)\\w+", message = "Password must have at least one character and at least one number")
-    @Size(min=3, max=16, message = "Password must be 3-16 characters long")
+//    @Pattern(regexp = "(?=\\w*(?!\\d)\\w)(?=\\w*\\d)\\w+", message = "Password must have at least one character and at least one number")
+//    @Size(min=3, max=16, message = "Password must be 3-16 characters long")
     @NotBlank(message = "Password cannot be empty")
     private String password;
-
-    @Transient
-    @NotBlank(message = "Password confirmation cannot be empty")
-    private String confirmPassword;
 
     @Pattern(regexp = "^[a-zA-Z]+$", message = "firstName must contain only latin characters")
     @Size(min=1, max=16, message = "firstName must be 3-16 characters long")

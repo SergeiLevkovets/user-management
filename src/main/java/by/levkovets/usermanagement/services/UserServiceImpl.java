@@ -3,6 +3,7 @@ package by.levkovets.usermanagement.services;
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
 import by.levkovets.usermanagement.repository.UserAccountRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,8 +22,6 @@ public class UserServiceImpl implements UserService {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-
 
     @Override
     public UserAccount findByUserName(String userName) {
@@ -52,33 +51,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserAccount userAccount){
 
-        userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
+        if (passwordEncoder.upgradeEncoding(userAccount.getPassword())) {
+            userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
+        }
 
-        userAccountRepository.save(userAccount);
-    }
-
-    @Override
-    public void updateUser(UserAccount userAccount){
         userAccountRepository.save(userAccount);
     }
 
     @Override
     public List<UserAccount> getAllUsers() {
-        return userAccountRepository.findAll();
+        return userAccountRepository.findAllByOrderById();
     }
 
-    @Override
-    public void registerUser(UserAccount userAccount){
-
-        userAccount.setActive(true);
-
-        userAccount.setRole(Role.ROLE_USER);
-
-        userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
-
-        userAccountRepository.save(userAccount);
-
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

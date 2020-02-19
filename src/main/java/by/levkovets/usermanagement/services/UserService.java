@@ -14,11 +14,7 @@ public interface UserService extends UserDetailsService {
 
     UserAccount findById(Long id);
 
-    void registerUser(UserAccount userAccount);
-
     void saveUser(UserAccount userAccount);
-
-    void updateUser(UserAccount userAccount);
 
     List<UserAccount> filterByUserName(String userName);
 

@@ -23,15 +23,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(){
+
+            @Override
+            public boolean upgradeEncoding(String encodedPassword) {
+                return encodedPassword.length() <= 16;
+            }
+
+        };
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/home", "/registration").permitAll()
-                    .antMatchers("/login").anonymous()
+                .antMatchers("/", "/home", "/registration").permitAll()
+                .antMatchers("/login").anonymous()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

@@ -1,5 +1,7 @@
+drop extension if exists pgcrypto;
+create extension if not exists pgcrypto;
 
-insert into user_account (id, user_name, password, first_name, last_name, role, active)
-values  (1, 'admin', 'admin1', 'admin', 'adminov', 'ROLE_ADMIN', true),
-        (2, 'user', '1a', 'user', 'userov', 'ROLE_USER', true),
-        (3, 'ivan', '1a', 'Ivan', 'Ivanov', 'ROLE_USER', false );
+insert into user_account ( user_name, password, first_name, last_name, role, active)
+values  ( 'admin', crypt('admin1', gen_salt('bf', 8)), 'admin', 'adminov', 'ROLE_ADMIN', true),
+        ( 'user', crypt('qwe1', gen_salt('bf', 8)), 'user', 'userov', 'ROLE_USER', true),
+        ( 'user1', crypt('qwe1', gen_salt('bf', 8)), 'Ivan', 'Ivanov', 'ROLE_USER', false );
