@@ -1,49 +1,55 @@
-package by.levkovets.usermanagement.security;
+package by.levkovets.usermanagement.config;
 
 import by.levkovets.usermanagement.damain.UserAccount;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 public class UserPrincipal implements UserDetails {
 
-    @Autowired
-    UserAccount userAccount;
+    private final UserAccount userAccount;
+
+    UserPrincipal(UserAccount userAccount) {
+        this.userAccount = userAccount;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Set<SimpleGrantedAuthority> singleton = Collections.singleton(new SimpleGrantedAuthority(userAccount.getRole().name()));
+        return singleton;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return userAccount.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return userAccount.getUserName();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return userAccount.isActive();
     }
 }

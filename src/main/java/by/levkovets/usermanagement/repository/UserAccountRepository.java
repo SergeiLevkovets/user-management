@@ -12,6 +12,8 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Long> 
 
     List<UserAccount> findAllByUserNameIsContaining(String userName);
 
+    List<UserAccount> findAllByRoleAndUserNameIsContaining(Role role, String userNaame);
+
     List<UserAccount> findAllByRole(Role role);
 
     List<UserAccount> findAllByOrderById();

@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MainController {
 
     @GetMapping({"/", "/index"})
-    public String root(Authentication authentication) {
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-        }
+    public String root() {
         return "home";
     }
 

@@ -9,43 +9,68 @@
     <title>Registration!</title>
 </head>
 <body>
-<header th:insert="navbar :: navbar"></header>
+<header th:insert="home :: navbar"></header>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h1>Users list</h1>
+    <h2>Users list</h2>
 
-            <a class="btn btn-success" th:href="@{/user/new}">Add new user</a>
+    <div class="row mb-3"><a class="btn btn-success" th:href="@{/user/new}">Add new user</a></div>
 
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>User Name</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.id}"></td>
-                        <td th:text="${user.userName}"></td>
-                        <td><a href="/" th:href="@{'/user/' + ${user.id}}">get details</a></td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="row mb-3">
+        <form th:action="@{/user/filter}" method="get">
+            <div class="form-row">
+                <div class="col">
+                    <label for="userName" class="control-label">User name</label>
+                    <input id="userName" name="userName" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="role" class="control-label">Role</label>
+                    <select id="role" class="form-control" name="role">
+                        <option selected></option>
+                        <option value="ROLE_USER">USER</option>
+                        <option value="ROLE_ADMIN">ADMIN</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="submit" class="btn btn-info" value="Filter">
+                </div>
+            </div>
+        </form>
+    </div>
 
-
-
-        </div>
+    <div class="row mb-3">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>User Name</th>
+                <th>Role</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.userName}"></td>
+                <td th:text="${user.role}"></td>
+                <td><a href="/" th:href="@{'/user/' + ${user.id}}">get details</a></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
@@ -14,12 +15,12 @@
     <title>View</title>
 </head>
 <body>
-<header th:insert="navbar :: navbar"></header>
+<header th:insert="home :: navbar"></header>
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Users list</h1>
+            <h2>Users list</h2>
             <table class="table table-bordered">
                 <thead class="thead-light">
                 <tr>
@@ -30,7 +31,7 @@
                     <th scope="col">Role</th>
                     <th scope="col">Status</th>
                     <th scope="col">CreatedAt</th>
-                    <th scope="col"></th>
+                    <th scope="col" sec:authorize="hasRole('ADMIN')"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,16 +41,18 @@
                     <td th:text="${user.firstName}"></td>
                     <td th:text="${user.lastName}"></td>
                     <td th:text="${user.role}"></td>
-                    <td>
+                    <td sec:authorize="hasRole('USER')" th:text="(${user.active}? 'Unlock': 'Lock')"></td>
+                    <td sec:authorize="hasRole('ADMIN')">
                         <form th:action="@{'/user/' + ${user.id}}" th:object="${user}" method="post">
-                            <select class="form-control" th:field="*{active}" onchange="this.form.submit()" >
+                            <select class="form-control"  th:field="*{active}" onchange="this.form.submit()" >
                                 <option th:value="true">Unlock</option>
                                 <option th:value="false">Lock</option>
                             </select>
                         </form>
                     </td>
+
                     <td th:text="${user.createdAt}"></td>
-                    <td><a href="/" th:href="@{'/user/' + ${user.id} + '/edit'}">get details</a></td>
+                    <td sec:authorize="hasRole('ADMIN')"><a href="/" th:href="@{'/user/' + ${user.id} + '/edit'}">Update</a></td>
                 </tr>
                 </tbody>
             </table>

@@ -1,5 +1,6 @@
 package by.levkovets.usermanagement.controllers;
 
+import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
 import by.levkovets.usermanagement.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -21,26 +22,51 @@ public class UserController {
     }
 
     @ModelAttribute("user")
-    public UserAccount user(){
+    public UserAccount user() {
         return new UserAccount();
     }
 
     @GetMapping
-    public String showUsers(Model model){
+    public String showUsers(Model model) {
+        List<UserAccount> allUsers = userService.getAllUsers();
+        model.addAttribute("users", allUsers);
+        return "list";
+    }
+
+    @GetMapping("/filter")
+    public String filter(@ModelAttribute("userName") String userName,
+                         @ModelAttribute("role") String role,
+                         Model model) {
+        if (role.isBlank()){
+            if (!userName.isBlank()){
+                List<UserAccount> allUsers = userService.filterByUserName(userName);
+                model.addAttribute("users", allUsers);
+                return "list";
+            }
+        }else {
+            if (!userName.isBlank()){
+                List<UserAccount> allUsers = userService.filterByRoleAndUserName(Role.valueOf(role), userName);
+                model.addAttribute("users", allUsers);
+                return "list";
+            }
+            List<UserAccount> allUsers = userService.filterByRole(Role.valueOf(role));
+            model.addAttribute("users", allUsers);
+            return "list";
+        }
         List<UserAccount> allUsers = userService.getAllUsers();
         model.addAttribute("users", allUsers);
         return "list";
     }
 
     @GetMapping("/{id}")
-    public String showUser(@PathVariable("id") Long id, Model model){
+    public String showUser(@PathVariable("id") Long id, Model model) {
         UserAccount userAccount = userService.findById(id);
         model.addAttribute("user", userAccount);
         return "view";
     }
 
     @PostMapping("/{id}")
-    public String changeStatus(@PathVariable("id") Long id, UserAccount user, Model model){
+    public String changeStatus(@PathVariable("id") Long id, UserAccount user, Model model) {
         UserAccount userAccount = userService.findById(id);
 
         userAccount.setActive(user.isActive());
@@ -49,27 +75,25 @@ public class UserController {
 
         model.addAttribute("user", userAccount);
 
-        return "view";
+        return "redirect:/user/" + userAccount.getId();
     }
 
     @GetMapping("/new")
-    public String createUser(){
+    public String createUser() {
         return "new";
     }
 
     @PostMapping("/new")
-    public String saveUser(@ModelAttribute("user") @Valid UserAccount userAccount,
-                           BindingResult result){
-
+    public String saveUser(@ModelAttribute("user") @Valid UserAccount userAccount, BindingResult result) {
 
         if (userAccount.getId() == null) {
-            UserAccount existing = userService.findByUserName(userAccount.getUsername());
-            if (existing != null){
+            UserAccount existing = userService.findByUserName(userAccount.getUserName());
+            if (existing != null) {
                 result.rejectValue("userName", null, "There is already an user with that username");
             }
         }
 
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return "new";
         }
 
@@ -79,16 +103,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/edit")
-    public String updateUser(@PathVariable("id") UserAccount user, Model model){
+    public String updateUser(@PathVariable("id") UserAccount user, Model model) {
 
         model.addAttribute("user", user);
 
         return "new";
     }
-
-
-
-
 
 
 }

@@ -32,7 +32,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserAccount findById(Long id) {
         UserAccount userAccount = userAccountRepository.findById(id).get();
-        userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));
         return userAccount;
     }
 
@@ -45,6 +44,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserAccount> filterByRole(Role role) {
         List<UserAccount> list = userAccountRepository.findAllByRole(role);
+        return list;
+    }
+
+    @Override
+    public List<UserAccount> filterByRoleAndUserName(Role role, String userName) {
+        List<UserAccount> list = userAccountRepository.findAllByRoleAndUserNameIsContaining(role, userName);
         return list;
     }
 
@@ -63,16 +68,4 @@ public class UserServiceImpl implements UserService {
         return userAccountRepository.findAllByOrderById();
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAccount userAccount = userAccountRepository.findByUserName(username);
-
-        if (userAccount == null){
-            throw new UsernameNotFoundException("User not fount");
-        }
-
-        return new org.springframework.security.core.userdetails.User(userAccount.getUsername(),
-                userAccount.getPassword(), userAccount.getAuthorities());
-    }
 }

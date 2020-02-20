@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+            xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
     <title>User management</title>
 </head>
 <body>
@@ -18,32 +16,30 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" th:href="@{~/}">Home page</a>
+                <a class="nav-link" th:href="@{/}">Home page</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{~/user}">Users list</a>
+                <a class="nav-link" th:href="@{/user}">Users list</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{~/login}">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link" th:href="@{/user/new}" sec:authorize="hasRole('ADMIN')">Create user</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" th:action="@{~/logout}" method="post">
+        <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
             <button sec:authorize="isAuthenticated()" class="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>
-            <button sec:authorize="isAnonymous()" th:href="@{~/login}" class="btn btn-outline-info my-2 my-sm-0">Login</button>
         </form>
+        <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-info my-2 my-sm-0">Login</a>
     </div>
 </nav>
 
 <div class="container">
     <h1>Welcome!</h1>
 
-    <div>Logged user: <span sec:authentication="name">Anonymous</span></div>
-    <div>Roles: <span sec:authentication="principal.authorities">unknown</span></div>
-    <div>#{loginMB.authentication.authorities}</div>
+    <div>Logged user: <span sec:authentication="name">?</span></div>
 
+    <div sec:authorize="isAnonymous()">
+        This content is only shown to anonymous users.
+    </div>
     <div sec:authorize="isAuthenticated()">
         This content is only shown to authenticated users.
     </div>
