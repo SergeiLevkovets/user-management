@@ -19,6 +19,7 @@
             <form th:action="@{/user/new}" th:object="${user}" method="post">
 
                 <input hidden th:field="*{id}">
+                <input hidden th:field="*{createdAt}" >
 
                 <div class="form-group">
                     <label for="userName" class="control-label">User name</label>

@@ -2,18 +2,15 @@ package by.levkovets.usermanagement.services;
 
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface UserService {
 
-    UserAccount findByUserName(String userName);
+    UserDTO findByUserName(String userName);
 
-    UserAccount findById(Long id);
-
-    void saveUser(UserAccount userAccount);
+    UserDTO findById(Long id);
 
     Page<UserAccount> filterByRoleAndUserName(Role role, String userName, Pageable pageable);
 
@@ -23,4 +20,5 @@ public interface UserService {
 
     Page<UserAccount> getAllUsers(Pageable pageable);
 
+    void saveUser(UserDTO userAccount);
 }

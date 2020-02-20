@@ -2,6 +2,8 @@ package by.levkovets.usermanagement.services;
 
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.dto.UserDTO;
+import by.levkovets.usermanagement.mapper.UserAccountMapper;
 import by.levkovets.usermanagement.repository.UserAccountRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,21 +17,26 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
+    private final UserAccountMapper userAccountMapper;
+
+    public UserServiceImpl(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder, UserAccountMapper userAccountMapper) {
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userAccountMapper = userAccountMapper;
     }
 
     @Override
-    public UserAccount findByUserName(String userName) {
-        UserAccount byUserAccountName = userAccountRepository.findByUserName(userName);
-        return byUserAccountName;
+    public UserDTO findByUserName(String userName) {
+        UserAccount userAccount = userAccountRepository.findByUserName(userName);
+        UserDTO userDTO = userAccountMapper.userToUserDTO(userAccount);
+        return userDTO;
     }
 
     @Override
-    public UserAccount findById(Long id) {
+    public UserDTO findById(Long id) {
         UserAccount userAccount = userAccountRepository.findById(id).get();
-        return userAccount;
+        UserDTO userDTO = userAccountMapper.userToUserDTO(userAccount);
+        return userDTO;
     }
 
     @Override
@@ -56,7 +63,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(UserAccount userAccount){
+    public void saveUser(UserDTO userDTO){
+
+        UserAccount userAccount = userAccountMapper.UserDTOToUser(userDTO);
 
         if (passwordEncoder.upgradeEncoding(userAccount.getPassword())) {
             userAccount.setPassword(passwordEncoder.encode(userAccount.getPassword()));

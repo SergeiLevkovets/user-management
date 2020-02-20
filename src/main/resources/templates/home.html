@@ -33,14 +33,19 @@
 </nav>
 
 <div class="container">
-    <h1>Welcome!</h1>
-
+    <h1>Welcome! <span sec:authentication="name"></span></h1>
     <p>
-        Login parameter for Admin
+        Login parameter for admin
+        UserName: admin
+        Password: admin1
     </p>
-
-
+    <p>
+        Login parameter for user
+        UserName: user
+        Password: user1
+    </p>
 </div>
+
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

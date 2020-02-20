@@ -2,11 +2,13 @@ package by.levkovets.usermanagement.controllers;
 
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.dto.UserDTO;
 import by.levkovets.usermanagement.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,8 +27,8 @@ public class UserController {
     }
 
     @ModelAttribute("user")
-    public UserAccount user() {
-        return new UserAccount();
+    public UserDTO user() {
+        return new UserDTO();
     }
 
     @GetMapping()
@@ -57,40 +59,42 @@ public class UserController {
         Page<UserAccount> page = userService.getAllUsers(pageable);
         model.addAttribute("page", page);
 
-
         return "list";
     }
 
     @GetMapping("/{id}")
     public String showUser(@PathVariable("id") Long id, Model model) {
-        UserAccount userAccount = userService.findById(id);
-        model.addAttribute("user", userAccount);
+        UserDTO userDTO = userService.findById(id);
+        model.addAttribute("user", userDTO);
         return "view";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}")
-    public String changeStatus(@PathVariable("id") Long id, UserAccount user, Model model) {
-        UserAccount userAccount = userService.findById(id);
+    public String changeStatus(@PathVariable("id") Long id, UserDTO user, Model model) {
+        UserDTO userDTO = userService.findById(id);
 
-        userAccount.setActive(user.isActive());
+        userDTO.setActive(user.isActive());
 
-        userService.saveUser(userAccount);
+        userService.saveUser(userDTO);
 
-        model.addAttribute("user", userAccount);
+        model.addAttribute("user", userDTO);
 
-        return "redirect:/user/" + userAccount.getId();
+        return "redirect:/user/" + userDTO.getId();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/new")
     public String createUser() {
         return "new";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/new")
-    public String saveUser(@ModelAttribute("user") @Valid UserAccount userAccount, BindingResult result) {
+    public String saveUser(@ModelAttribute("user") @Valid UserDTO userDto, BindingResult result) {
 
-        if (userAccount.getId() == null) {
-            UserAccount existing = userService.findByUserName(userAccount.getUserName());
+        if (userDto.getId() == null) {
+            UserDTO existing = userService.findByUserName(userDto.getUserName());
             if (existing != null) {
                 result.rejectValue("userName", null, "There is already an user with that username");
             }
@@ -100,13 +104,16 @@ public class UserController {
             return "new";
         }
 
-        userService.saveUser(userAccount);
+        userService.saveUser(userDto);
 
         return "redirect:/user";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}/edit")
-    public String updateUser(@PathVariable("id") UserAccount user, Model model) {
+    public String updateUser(@PathVariable("id") Long id, Model model) {
+
+        UserDTO user = userService.findById(id);
 
         model.addAttribute("user", user);
 
