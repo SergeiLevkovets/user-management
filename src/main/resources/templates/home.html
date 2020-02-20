@@ -35,28 +35,11 @@
 <div class="container">
     <h1>Welcome!</h1>
 
-    <div>Logged user: <span sec:authentication="name">?</span></div>
+    <p>
+        Login parameter for Admin
+    </p>
 
-    <div sec:authorize="isAnonymous()">
-        This content is only shown to anonymous users.
-    </div>
-    <div sec:authorize="isAuthenticated()">
-        This content is only shown to authenticated users.
-    </div>
-    <div sec:authorize="hasRole('ADMIN')">
-        This content is only shown to administrators.
-    </div>
-    <div sec:authorize="hasRole('USER')">
-        This content is only shown to users.
-    </div>
 
-    <p>Click <a th:href="@{/user}">here</a> to see users list.</p>
-
-    <p>Click <a th:href="@{/login}">here</a> to Login.</p>
-
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out"/>
-    </form>
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

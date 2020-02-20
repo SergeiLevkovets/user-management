@@ -2,21 +2,18 @@ package by.levkovets.usermanagement.repository;
 
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
     UserAccount findByUserName(String userName);
 
-    List<UserAccount> findAllByUserNameIsContaining(String userName);
+    Page<UserAccount> findAllByUserNameIsContaining(String userName, Pageable pageable);
 
-    List<UserAccount> findAllByRoleAndUserNameIsContaining(Role role, String userNaame);
+    Page<UserAccount> findAllByRoleAndUserNameIsContaining(Role role, String userName, Pageable pageable);
 
-    List<UserAccount> findAllByRole(Role role);
-
-    List<UserAccount> findAllByOrderById();
-
+    Page<UserAccount> findAllByRole(Role role, Pageable pageable);
 
 }

@@ -2,9 +2,8 @@ package by.levkovets.usermanagement.services;
 
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,14 +13,14 @@ public interface UserService {
 
     UserAccount findById(Long id);
 
-    List<UserAccount> filterByRoleAndUserName(Role role, String userName);
-
     void saveUser(UserAccount userAccount);
 
-    List<UserAccount> filterByUserName(String userName);
+    Page<UserAccount> filterByRoleAndUserName(Role role, String userName, Pageable pageable);
 
-    List<UserAccount> filterByRole(Role role);
+    Page<UserAccount> filterByUserName(String userName, Pageable pageable);
 
-    List<UserAccount> getAllUsers();
+    Page<UserAccount> filterByRole(Role role, Pageable pageable);
+
+    Page<UserAccount> getAllUsers(Pageable pageable);
 
 }

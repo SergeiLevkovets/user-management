@@ -16,27 +16,75 @@
 
     <div class="row mb-3"><a class="btn btn-success" th:href="@{/user/new}">Add new user</a></div>
 
-    <div class="row mb-3">
-        <form th:action="@{/user/filter}" method="get">
+    <div class="row mb-5">
+        <form th:action="@{/user}" method="get">
             <div class="form-row">
                 <div class="col">
                     <label for="userName" class="control-label">User name</label>
-                    <input id="userName" name="userName" class="form-control">
+                    <input id="userName" name="userName" th:value="${userName}" class="form-control">
                 </div>
                 <div class="col">
                     <label for="role" class="control-label">Role</label>
                     <select id="role" class="form-control" name="role">
                         <option selected></option>
-                        <option value="ROLE_USER">USER</option>
-                        <option value="ROLE_ADMIN">ADMIN</option>
+                        <option value="ROLE_USER" th:selected="${role == 'ROLE_USER'}">USER</option>
+                        <option value="ROLE_ADMIN" th:selected="${role == 'ROLE_ADMIN'}">ADMIN</option>
                     </select>
                 </div>
-                <div class="col">
-                    <input type="submit" class="btn btn-info" value="Filter">
+                <input hidden name="size" th:value="${page.size}">
+                <div class="col-auto mt-4 ml-4">
+                    <input type="submit" class="btn btn-info bottom" value="Filter">
                 </div>
             </div>
         </form>
     </div>
+
+    <div class="row">
+        <div class="col-6">
+            <nav th:fragment="pagination" aria-label="Pagination" th:if="${page.totalPages > 0}">
+                <ul class="pagination justify-content-left font-weight-medium">
+                    <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/user(page=${page.number > 1 ? page.number - 1 : 0},size=${page.size})}"><span aria-hidden="true">&laquo;</span></a>
+                    </li>
+                    <li class="page-item" th:if="${page.number > 3}">
+                        <a class="page-link svg-icon" th:href="@{/user(page=0,size=${page.size})}">1</a>
+                    </li>
+                    <li class="page-item disabled" th:if="${page.number > 3}">
+                        <a class="page-link svg-icon" href="#"><span aria-hidden="true">&#46;&#46;&#46;</span></a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${p == page.number + 1} ? 'active'"
+                        th:each="p : ${#numbers.sequence((page.number < 4 ? 1 : page.number - 1) ,(page.number + 4 < page.totalPages ? page.number + 3 : page.totalPages ) )}">
+                        <a th:if="${p == page.number + 1}" th:text="${p}" class="page-link" href="#"></a>
+                        <a th:unless="${p == page.number + 1}" th:text="${p}" th:href="@{/user(page=(${p} - 1),size=${page.size})}" class="page-link"></a>
+                    </li>
+
+                    <li class="page-item disabled" th:if="${page.number + 4 < page.totalPages}">
+                        <a class="page-link svg-icon" href="#"><span aria-hidden="true">&#46;&#46;&#46;</span></a>
+                    </li>
+                    <li class="page-item" th:if="${page.number + 4 < page.totalPages}">
+                        <a class="page-link svg-icon" th:href="@{/user(page=${page.totalPages - 1},size=${page.size})}" th:text="${page.totalPages}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${page.number + 1 == page.totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{/user(page=${page.number + 1},size=${page.size})}"><span aria-hidden="true">&raquo;</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col"></div>
+        <div class="col-5">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">items per page</a>
+                </li>
+                <li class="page-item" th:each="c : ${#numbers.sequence(5, 25, 5)}" th:classappend="${c == page.size}? 'active' : ''">
+                    <a th:if="${c == page.size}" th:text="${c}" class="page-link" href="#"></a>
+                    <a th:unless="${c == page.size}" th:text="${c}" th:href="@{/user(page=${page.number},size=${c})}" class="page-link"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 
     <div class="row mb-3">
         <table class="table table-bordered">
@@ -49,7 +97,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}">
+            <tr th:each="user : ${page}">
                 <td th:text="${user.id}"></td>
                 <td th:text="${user.userName}"></td>
                 <td th:text="${user.role}"></td>
@@ -58,6 +106,8 @@
             </tbody>
         </table>
     </div>
+
+    <div class="row mb-3" th:insert=" :: pagination"></div>
 </div>
 
 <!-- Optional JavaScript -->

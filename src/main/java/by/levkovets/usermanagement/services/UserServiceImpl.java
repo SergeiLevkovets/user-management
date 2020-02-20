@@ -3,13 +3,10 @@ package by.levkovets.usermanagement.services;
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
 import by.levkovets.usermanagement.repository.UserAccountRepository;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,21 +33,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserAccount> filterByUserName(String userName) {
-        List<UserAccount> list = userAccountRepository.findAllByUserNameIsContaining(userName);
+    public Page<UserAccount> filterByUserName(String userName, Pageable pageable) {
+        Page<UserAccount> list = userAccountRepository.findAllByUserNameIsContaining(userName, pageable);
         return list;
     }
 
     @Override
-    public List<UserAccount> filterByRole(Role role) {
-        List<UserAccount> list = userAccountRepository.findAllByRole(role);
+    public Page<UserAccount> filterByRole(Role role, Pageable pageable) {
+        Page<UserAccount> list = userAccountRepository.findAllByRole(role, pageable);
         return list;
     }
 
     @Override
-    public List<UserAccount> filterByRoleAndUserName(Role role, String userName) {
-        List<UserAccount> list = userAccountRepository.findAllByRoleAndUserNameIsContaining(role, userName);
+    public Page<UserAccount> filterByRoleAndUserName(Role role, String userName, Pageable pageable) {
+        Page<UserAccount> list = userAccountRepository.findAllByRoleAndUserNameIsContaining(role, userName, pageable);
         return list;
+    }
+
+    @Override
+    public Page<UserAccount> getAllUsers(Pageable pageable) {
+        return userAccountRepository.findAll(pageable);
     }
 
     @Override
@@ -61,11 +63,6 @@ public class UserServiceImpl implements UserService {
         }
 
         userAccountRepository.save(userAccount);
-    }
-
-    @Override
-    public List<UserAccount> getAllUsers() {
-        return userAccountRepository.findAllByOrderById();
     }
 
 }

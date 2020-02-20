@@ -3,13 +3,16 @@ package by.levkovets.usermanagement.controllers;
 import by.levkovets.usermanagement.damain.Role;
 import by.levkovets.usermanagement.damain.UserAccount;
 import by.levkovets.usermanagement.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -26,35 +29,35 @@ public class UserController {
         return new UserAccount();
     }
 
-    @GetMapping
-    public String showUsers(Model model) {
-        List<UserAccount> allUsers = userService.getAllUsers();
-        model.addAttribute("users", allUsers);
-        return "list";
-    }
+    @GetMapping()
+    public String showUsers(@RequestParam(required=false, defaultValue = "") String userName,
+                         @RequestParam(required=false, defaultValue = "") String role,
+                         Model model,
+                         @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        model.addAttribute("userName", userName);
+        model.addAttribute("role", role);
 
-    @GetMapping("/filter")
-    public String filter(@ModelAttribute("userName") String userName,
-                         @ModelAttribute("role") String role,
-                         Model model) {
         if (role.isBlank()){
             if (!userName.isBlank()){
-                List<UserAccount> allUsers = userService.filterByUserName(userName);
-                model.addAttribute("users", allUsers);
+                Page<UserAccount> page = userService.filterByUserName(userName, pageable);
+                model.addAttribute("page", page);
                 return "list";
             }
         }else {
             if (!userName.isBlank()){
-                List<UserAccount> allUsers = userService.filterByRoleAndUserName(Role.valueOf(role), userName);
-                model.addAttribute("users", allUsers);
+                Page<UserAccount> page = userService.filterByRoleAndUserName(Role.valueOf(role), userName, pageable);
+                model.addAttribute("page", page);
                 return "list";
             }
-            List<UserAccount> allUsers = userService.filterByRole(Role.valueOf(role));
-            model.addAttribute("users", allUsers);
+            Page<UserAccount> page = userService.filterByRole(Role.valueOf(role), pageable);
+            model.addAttribute("page", page);
             return "list";
         }
-        List<UserAccount> allUsers = userService.getAllUsers();
-        model.addAttribute("users", allUsers);
+        Page<UserAccount> page = userService.getAllUsers(pageable);
+        model.addAttribute("page", page);
+
+
         return "list";
     }
 
