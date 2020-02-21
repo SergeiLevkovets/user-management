@@ -18,7 +18,7 @@ import javax.validation.Valid;
 
 /**
  * Operations pertaining to user in User Management
- * */
+ */
 
 @Controller
 @RequestMapping("/user")
@@ -36,23 +36,24 @@ public class UserController {
     }
 
     @GetMapping()
-    public String showUsers(@RequestParam(required=false, defaultValue = "") String userName,
-                            @RequestParam(required=false, defaultValue = "") String role,
+    public String showUsers(@RequestParam(required = false, defaultValue = "") String userName,
+                            @RequestParam(required = false, defaultValue = "") String role,
                             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
                             Model model
     ) {
         model.addAttribute("userName", userName);
         model.addAttribute("role", role);
 
-        if (role.isBlank()){
-            if (!userName.isBlank()){
+        if (role.isBlank()) {
+            if (!userName.isBlank()) {
 
                 Page<UserAccount> page = userService.filterByUserName(userName, pageable);
                 model.addAttribute("page", page);
+
                 return "list";
             }
-        }else {
-            if (!userName.isBlank()){
+        } else {
+            if (!userName.isBlank()) {
 
                 Page<UserAccount> page = userService.filterByRoleAndUserName(Role.valueOf(role), userName, pageable);
                 model.addAttribute("page", page);
@@ -102,17 +103,14 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/new")
-    public String saveUser(@ModelAttribute("user") @Valid UserDTO userDto, BindingResult result) {
+    public String saveUser(@ModelAttribute("user") @Valid UserDTO userDTO, BindingResult result) {
 
-        if (userDto.getId() == null) {
+        UserDTO existing = userService.findByUserName(userDTO.getUserName());
 
-            UserDTO existing = userService.findByUserName(userDto.getUserName());
+        if (existing != null) {
 
-            if (existing != null) {
+            result.rejectValue("userName", null, "There is already an user with that username");
 
-                result.rejectValue("userName", null, "There is already an user with that username");
-
-            }
         }
 
         if (result.hasErrors()) {
@@ -121,20 +119,54 @@ public class UserController {
 
         }
 
-        userService.saveUser(userDto);
+        userService.saveUser(userDTO);
 
-        return "redirect:/user";
+        return "redirect:/user/" + userDTO.getId();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}/edit")
-    public String updateUser(@PathVariable("id") Long id, Model model) {
+    public String getUpdateUser(@PathVariable("id") Long id, Model model) {
 
         UserDTO user = userService.findById(id);
 
         model.addAttribute("user", user);
 
-        return "new";
+        return "edit";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/edit")
+    public String updateUser(
+            @RequestParam(required = false, defaultValue = "") String change,
+            @ModelAttribute("user") @Valid UserDTO userDTO,
+            BindingResult result,
+            Model model) {
+
+        model.addAttribute("change", change);
+
+        UserDTO existing = userService.findByUserName(userDTO.getUserName());
+
+        if (existing != null && !userDTO.getId().equals(existing.getId())) {
+
+            result.rejectValue("userName", null, "There is already an user with that username");
+
+        }
+
+        if (result.hasErrors()) {
+
+            return "edit";
+
+        }
+
+        if (change.isEmpty()){
+            UserDTO byId = userService.findById(userDTO.getId());
+            userDTO.setPassword(byId.getPassword());
+        }
+
+        userService.saveUser(userDTO);
+
+        return "redirect:/user/" + userDTO.getId();
     }
 
 

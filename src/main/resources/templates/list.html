@@ -44,10 +44,10 @@
             <nav th:fragment="pagination" aria-label="Pagination" th:if="${page.totalPages > 0}">
                 <ul class="pagination justify-content-left font-weight-medium">
                     <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                        <a class="page-link" th:href="@{/user(page=${page.number > 1 ? page.number - 1 : 0},size=${page.size})}"><span aria-hidden="true">&laquo;</span></a>
+                        <a class="page-link" th:href="@{/user(page=${page.number > 1 ? page.number - 1 : 0},size=${page.size},userName=${userName},role=${role})}"><span aria-hidden="true">&laquo;</span></a>
                     </li>
                     <li class="page-item" th:if="${page.number > 3}">
-                        <a class="page-link svg-icon" th:href="@{/user(page=0,size=${page.size})}">1</a>
+                        <a class="page-link svg-icon" th:href="@{/user(page=0,size=${page.size},userName=${userName},role=${role})}">1</a>
                     </li>
                     <li class="page-item disabled" th:if="${page.number > 3}">
                         <a class="page-link svg-icon" href="#"><span aria-hidden="true">&#46;&#46;&#46;</span></a>
@@ -56,17 +56,17 @@
                     <li class="page-item" th:classappend="${p == page.number + 1} ? 'active'"
                         th:each="p : ${#numbers.sequence((page.number < 4 ? 1 : page.number - 1) ,(page.number + 4 < page.totalPages ? page.number + 3 : page.totalPages ) )}">
                         <a th:if="${p == page.number + 1}" th:text="${p}" class="page-link" href="#"></a>
-                        <a th:unless="${p == page.number + 1}" th:text="${p}" th:href="@{/user(page=(${p} - 1),size=${page.size})}" class="page-link"></a>
+                        <a th:unless="${p == page.number + 1}" th:text="${p}" th:href="@{/user(page=(${p} - 1),size=${page.size},userName=${userName},role=${role})}" class="page-link"></a>
                     </li>
 
                     <li class="page-item disabled" th:if="${page.number + 4 < page.totalPages}">
                         <a class="page-link svg-icon" href="#"><span aria-hidden="true">&#46;&#46;&#46;</span></a>
                     </li>
                     <li class="page-item" th:if="${page.number + 4 < page.totalPages}">
-                        <a class="page-link svg-icon" th:href="@{/user(page=${page.totalPages - 1},size=${page.size})}" th:text="${page.totalPages}"></a>
+                        <a class="page-link svg-icon" th:href="@{/user(page=${page.totalPages - 1},size=${page.size},userName=${userName},role=${role})}" th:text="${page.totalPages}"></a>
                     </li>
                     <li class="page-item" th:classappend="${page.number + 1 == page.totalPages} ? 'disabled'">
-                        <a class="page-link" th:href="@{/user(page=${page.number + 1},size=${page.size})}"><span aria-hidden="true">&raquo;</span></a>
+                        <a class="page-link" th:href="@{/user(page=${page.number + 1},size=${page.size},userName=${userName},role=${role})}"><span aria-hidden="true">&raquo;</span></a>
                     </li>
                 </ul>
             </nav>
@@ -79,7 +79,7 @@
                 </li>
                 <li class="page-item" th:each="c : ${#numbers.sequence(5, 25, 5)}" th:classappend="${c == page.size}? 'active' : ''">
                     <a th:if="${c == page.size}" th:text="${c}" class="page-link" href="#"></a>
-                    <a th:unless="${c == page.size}" th:text="${c}" th:href="@{/user(page=${page.number},size=${c})}" class="page-link"></a>
+                    <a th:unless="${c == page.size}" th:text="${c}" th:href="@{/user(page=${page.number},size=${c},userName=${userName},role=${role})}" class="page-link"></a>
                 </li>
             </ul>
         </div>
