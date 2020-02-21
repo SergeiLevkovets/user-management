@@ -9,6 +9,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * JavaBean object that represent UserPrincipal for Spring security
+ * */
+
 public class UserPrincipal implements UserDetails {
 
     private final UserAccount userAccount;

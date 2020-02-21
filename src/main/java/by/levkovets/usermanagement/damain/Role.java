@@ -1,6 +1,8 @@
 package by.levkovets.usermanagement.damain;
 
-import org.springframework.security.core.GrantedAuthority;
+/**
+ * Simple object representing the role of users
+ * */
 
 public enum Role {
 

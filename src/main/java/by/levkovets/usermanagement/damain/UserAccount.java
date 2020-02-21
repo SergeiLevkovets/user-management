@@ -9,6 +9,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
+/**
+ * Simple javaBean domain object that represent UserAccount
+ * */
+
 @Entity
 @Data
 @AllArgsConstructor

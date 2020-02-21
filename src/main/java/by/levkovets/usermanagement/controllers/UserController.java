@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * Operations pertaining to user in User Management
+ * */
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -33,29 +37,33 @@ public class UserController {
 
     @GetMapping()
     public String showUsers(@RequestParam(required=false, defaultValue = "") String userName,
-                         @RequestParam(required=false, defaultValue = "") String role,
-                         Model model,
-                         @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable
+                            @RequestParam(required=false, defaultValue = "") String role,
+                            @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+                            Model model
     ) {
         model.addAttribute("userName", userName);
         model.addAttribute("role", role);
 
         if (role.isBlank()){
             if (!userName.isBlank()){
+
                 Page<UserAccount> page = userService.filterByUserName(userName, pageable);
                 model.addAttribute("page", page);
                 return "list";
             }
         }else {
             if (!userName.isBlank()){
+
                 Page<UserAccount> page = userService.filterByRoleAndUserName(Role.valueOf(role), userName, pageable);
                 model.addAttribute("page", page);
                 return "list";
             }
+
             Page<UserAccount> page = userService.filterByRole(Role.valueOf(role), pageable);
             model.addAttribute("page", page);
             return "list";
         }
+
         Page<UserAccount> page = userService.getAllUsers(pageable);
         model.addAttribute("page", page);
 
@@ -63,15 +71,18 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String showUser(@PathVariable("id") Long id, Model model) {
+    public String showUserDetails(@PathVariable("id") Long id, Model model) {
+
         UserDTO userDTO = userService.findById(id);
         model.addAttribute("user", userDTO);
+
         return "view";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}")
-    public String changeStatus(@PathVariable("id") Long id, UserDTO user, Model model) {
+    public String changeUserStatus(@PathVariable("id") Long id, UserDTO user, Model model) {
+
         UserDTO userDTO = userService.findById(id);
 
         userDTO.setActive(user.isActive());
@@ -94,14 +105,20 @@ public class UserController {
     public String saveUser(@ModelAttribute("user") @Valid UserDTO userDto, BindingResult result) {
 
         if (userDto.getId() == null) {
+
             UserDTO existing = userService.findByUserName(userDto.getUserName());
+
             if (existing != null) {
+
                 result.rejectValue("userName", null, "There is already an user with that username");
+
             }
         }
 
         if (result.hasErrors()) {
+
             return "new";
+
         }
 
         userService.saveUser(userDto);

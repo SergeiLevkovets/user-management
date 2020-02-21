@@ -6,6 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * DAO interface for {@link UserAccount} class.
+ * */
+
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
     UserAccount findByUserName(String userName);

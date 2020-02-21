@@ -1,12 +1,15 @@
 package by.levkovets.usermanagement.config;
 
-import by.levkovets.usermanagement.config.UserPrincipal;
 import by.levkovets.usermanagement.damain.UserAccount;
 import by.levkovets.usermanagement.repository.UserAccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+/**
+ * Service class for Spring security
+ * */
 
 @Service
 public class UserPrincipalDetailsService implements UserDetailsService {
