@@ -1,7 +1,7 @@
 package by.levkovets.usermanagement.controllers;
 
-import by.levkovets.usermanagement.damain.Role;
-import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.domain.Role;
+import by.levkovets.usermanagement.domain.UserAccount;
 import by.levkovets.usermanagement.dto.UserDTO;
 import by.levkovets.usermanagement.services.UserService;
 import org.springframework.data.domain.Page;

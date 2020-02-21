@@ -1,6 +1,6 @@
 package by.levkovets.usermanagement.config;
 
-import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.domain.UserAccount;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

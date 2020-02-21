@@ -1,6 +1,6 @@
 package by.levkovets.usermanagement.mapper;
 
-import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.domain.UserAccount;
 import by.levkovets.usermanagement.dto.UserDTO;
 
 /**

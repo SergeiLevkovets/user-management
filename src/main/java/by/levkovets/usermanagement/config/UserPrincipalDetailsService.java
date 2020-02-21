@@ -1,6 +1,6 @@
 package by.levkovets.usermanagement.config;
 
-import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.domain.UserAccount;
 import by.levkovets.usermanagement.repository.UserAccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

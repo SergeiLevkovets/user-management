@@ -1,4 +1,4 @@
-package by.levkovets.usermanagement.damain;
+package by.levkovets.usermanagement.domain;
 
 
 import lombok.AllArgsConstructor;

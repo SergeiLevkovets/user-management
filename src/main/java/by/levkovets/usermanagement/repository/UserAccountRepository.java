@@ -1,7 +1,7 @@
 package by.levkovets.usermanagement.repository;
 
-import by.levkovets.usermanagement.damain.Role;
-import by.levkovets.usermanagement.damain.UserAccount;
+import by.levkovets.usermanagement.domain.Role;
+import by.levkovets.usermanagement.domain.UserAccount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
