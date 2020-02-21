@@ -137,13 +137,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/edit")
-    public String updateUser(
-            @RequestParam(required = false, defaultValue = "") String change,
-            @ModelAttribute("user") @Valid UserDTO userDTO,
-            BindingResult result,
-            Model model) {
-
-        model.addAttribute("change", change);
+    public String updateUser(@ModelAttribute("user") @Valid UserDTO userDTO, BindingResult result) {
 
         UserDTO existing = userService.findByUserName(userDTO.getUserName());
 
@@ -157,11 +151,6 @@ public class UserController {
 
             return "edit";
 
-        }
-
-        if (change.isEmpty()){
-            UserDTO byId = userService.findById(userDTO.getId());
-            userDTO.setPassword(byId.getPassword());
         }
 
         userService.saveUser(userDTO);
